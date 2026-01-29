@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import Container from 'react-bootstrap/Container'
 
-import Student1 from './pages/examples/Student1'
-import Student4 from './pages/examples/Student4'
-import Student5 from './pages/examples/Student5'
-import UserCard from './pages/practice/UserCard'
-import ProductList from './pages/practice/ProductList'
+import { Routes, Route } from 'react-router-dom'
+import Login from './pages/Login'
+import Home from './pages/Home'
+import AppLayout from './components/AppLayout'
+import Header from './components/Header'
+import Footer from './components/Footer'
 
 
 const products = [
@@ -18,17 +20,23 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <div>Expense - React - Client
-      {/* <Student5/> */}
-      {/* <UserCard name="Vinay Verma" age="20" location="Jalandhar" isPremium="true"/>
-      <UserCard name="Neha Verma" age="22" location="Chandigarh" isPremium="false"/>
-      <UserCard name="Nishant Verma" age="23" location="Amritsar" isPremium="true"/> */}
+    <>
 
+      <Routes>
+        <Route path='/' element={
+          <AppLayout>
+            <Home />
+          </AppLayout>
+        } />
 
-      <ProductList products={products} />
+        <Route path='/login' element={
+          <AppLayout>
+            <Login />
+          </AppLayout>
+        } />
+      </Routes>
 
-    </div>
-
+    </>
   )
 }
 
