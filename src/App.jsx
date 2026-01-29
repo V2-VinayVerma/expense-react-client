@@ -1,35 +1,37 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+
+import Student1 from './pages/examples/Student1'
+import Student4 from './pages/examples/Student4'
+import Student5 from './pages/examples/Student5'
+import UserCard from './pages/practice/UserCard'
+import ProductList from './pages/practice/ProductList'
+
+
+const products = [
+  { id: 1, name: "Laptop", price: 999, category: "Electronics" },
+  { id: 2, name: "Coffee Maker", price: 49, category: "Home" },
+  { id: 3, name: "Smartphone", price: 699, category: "Electronics" }
+];
+
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>Expense - React - Client
+      {/* <Student5/> */}
+      {/* <UserCard name="Vinay Verma" age="20" location="Jalandhar" isPremium="true"/>
+      <UserCard name="Neha Verma" age="22" location="Chandigarh" isPremium="false"/>
+      <UserCard name="Nishant Verma" age="23" location="Amritsar" isPremium="true"/> */}
+
+
+      <ProductList products={products} />
+
+    </div>
+
   )
 }
 
 export default App
+
+
