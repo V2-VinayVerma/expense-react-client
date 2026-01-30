@@ -1,23 +1,26 @@
 import React, { useState } from 'react'
 import { Form, Button, Container, Row, Col } from 'react-bootstrap'
+import axios from 'axios'
+import { useNavigate, Link } from 'react-router-dom'
 import './Login.css'
 
-const Login = () => {
-  const [formData, setformData] = useState({
+function Login ({setUserDetails}) {
+  const navigate = useNavigate()
+  const [formData, setFormData] = useState({
     email: '',
     password: ''
   })
 
-
-  const [errors, seterrors] = useState('')
+  const [errors, setErrors] = useState({})
+  const [message, setMessage] = useState('')
 
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
 
-    setformData({
+    setFormData({
       ...formData,
-      [name]: value //
+      [name]: value
     })
   }
 
@@ -34,50 +37,81 @@ const Login = () => {
       isValid = false;
     }
 
-    seterrors(newErrors);
+    setErrors(newErrors);
     return isValid;
-
   }
 
-  const handleFormSubmit = (event) => {
-    event.preventDefault(); // prevents default ebhaviour of relaoding the page on submission of form
+const handleFormSubmit = async (event) => {
+  event.preventDefault();
 
-    if (validate()) {
-      console.log("Valid Form");
-    } else {
-      console.log("Invalid Form")
-    }
+  if (!validate()) return;
+
+  try {
+    const body = {
+      email: formData.email,
+      password: formData.password,
+    };
+
+    const config = { withCredentials: true };
+    const response = await axios.post('http://localhost:3000/auth/login', body, config);
+    setUserDetails(response.data.user);
+    setMessage("Login successful! Redirecting to dashboard...");
+    
+    setTimeout(() => {
+      navigate('/dashboard')
+    }, 1000)
   }
+  catch (error) {
+    console.log("error", error.response?.data?.message || error.message);
+    setErrors({
+      message: error.response?.data?.message || "Something went wrong, please try again"
+    })
+  }
+}
 
-  return (
-    <div children="container">
-      <h3>Login to continue...</h3>
-      <form onSubmit={handleFormSubmit}>
-        <div>
-          <label>Email: </label>
-          <input
-            className='form-control'
-            type="text"
-            name='email'
-            onChange={handleChange} />
+return (
+  <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
+    <Row className="w-100">
+      <Col md={6} lg={4} className="mx-auto">
+        <div className="login-form-container">
+          <h3 className="login-title mb-4">Login to continue...</h3>
+          {message && <div className="alert alert-success">{message}</div>}
+          {errors.message && <div className="alert alert-danger">{errors.message}</div>}
+          <form onSubmit={handleFormSubmit}>
+            <Form.Group className="mb-3">
+              <label className="form-label">Email</label>
+              <input
+                className='form-input form-control'
+                type="email"
+                name='email'
+                placeholder="Enter your email"
+                onChange={handleChange}
+                value={formData.email} />
+              {errors.email && <small className="text-danger d-block mt-2">{errors.email}</small>}
+            </Form.Group>
 
-            {errors.email && (errors.email)}
+            <Form.Group className="mb-4">
+              <label className="form-label">Password</label>
+              <input
+                className='form-input form-control'
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                onChange={handleChange}
+                value={formData.password} />
+              {errors.password && <small className="text-danger d-block mt-2">{errors.password}</small>}
+            </Form.Group>
+
+            <button type="submit" className="login-btn btn btn-primary w-100 text-white">Login</button>
+          </form>
+
+          <p className="text-center mt-3">
+            Don't have an account? <Link to="/register">Register here</Link>
+          </p>
         </div>
-
-        <div>
-          <label >Password:</label>
-          <input
-            className='form-control'
-            type="password"
-            name="password"
-            onChange={handleChange} />
-             {errors.password && (errors.password)}
-        </div>
-
-        <button>Login</button>
-      </form>
-
-    </div>
+      </Col>
+    </Row>
+  </Container>
   )
 }
 

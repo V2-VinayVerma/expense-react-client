@@ -1,39 +1,56 @@
 import { useState } from 'react'
 import Container from 'react-bootstrap/Container'
 
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import Login from './pages/Login'
+import Register from './pages/Register'
 import Home from './pages/Home'
 import AppLayout from './components/AppLayout'
+import DashboardLayout from './components/DashboardLayout'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import Dashboard from './pages/Dashboard'
 
 
-const products = [
-  { id: 1, name: "Laptop", price: 999, category: "Electronics" },
-  { id: 2, name: "Coffee Maker", price: 49, category: "Home" },
-  { id: 3, name: "Smartphone", price: 699, category: "Electronics" }
-];
 
 
 function App() {
   const [count, setCount] = useState(0)
-
+  const [userDetails, setUserDetails] = useState(null)
   return (
     <>
 
       <Routes>
-        <Route path='/' element={
-          <AppLayout>
-            <Home />
-          </AppLayout>
+        <Route path='/' element={userDetails ? (<Navigate to='/dashboard' />) :
+          (
+            <AppLayout>
+              <Home />
+            </AppLayout>)
         } />
 
-        <Route path='/login' element={
-          <AppLayout>
-            <Login />
-          </AppLayout>
+        <Route path='/login' element={userDetails ? (<Navigate to='/dashboard' />) :
+          (
+            <AppLayout>
+              <Login setUserDetails={setUserDetails} />
+            </AppLayout>)
         } />
+
+        <Route path='/register' element={userDetails ? (<Navigate to='/dashboard' />) :
+          (
+            <AppLayout>
+              <Register setUserDetails={setUserDetails} />
+            </AppLayout>)
+        } />
+
+        <Route
+          path='/dashboard' element={userDetails ? (
+            <DashboardLayout setUserDetails={setUserDetails}>
+              <Dashboard user={userDetails} />
+            </DashboardLayout>
+          ) :
+            (
+              <Navigate to='/login' />
+            )} />
       </Routes>
 
     </>
